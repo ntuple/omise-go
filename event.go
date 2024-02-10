@@ -31,6 +31,12 @@ func (ev *Event) UnmarshalJSON(buffer []byte) error {
 	proxy := EventProxy(*ev)
 	proxy.Key = shim.Key
 
+	// Handle if the data is not provided
+	if shim.Data == nil {
+		*ev = Event(proxy)
+		return nil
+	}
+
 	// Pre-init the right structure to match the returned type.
 	if shim.Data.Deleted {
 		proxy.Data = shim.Data // already *Deletion
